@@ -3,7 +3,8 @@ from nltk.tokenize import sent_tokenize
 import os
 
 filenames = os.listdir('essays_dataset/essays/')
-filename = 'essays_dataset/essays/' + filenames[0]
+# filename = 'essays_dataset/essays/' + filenames[0]
+filename = 'essays_dataset/essays/' + '38209.txt'
 one_essay = open(filename, 'r').read()
 
 def count_sentences():
