@@ -4,6 +4,13 @@ from nltk.tokenize import word_tokenize
 from nltk import pos_tag
 import os
 import re
+import csv
+
+from stanfordcorenlp import StanfordCoreNLP
+
+nlp = StanfordCoreNLP(r'../stanford-corenlp-full-2017-06-09')
+sentence = 'She was waiting in the room but he came in.'
+
 
 def count_sentences():
 
@@ -46,36 +53,56 @@ def count_sentences():
 
 
     temp_flag = False
+    return len(dot_processed_sentences)
+    # ''' Processing based on POS tags and finite verb '''
+    # for sentence_index, sentence in enumerate(dot_processed_sentences):
+    #     ''' Get the pos tag in each sentence after tokenizing it'''
+    #     tagged_sentence = (nlp.pos_tag(sentence.strip()))
+    #     parsed_sentence = nlp.dependency_parse(sentence.strip())
+    #
+    #     finite_verb_count = 0
+    #     for parsed_token_index, parsed_token in enumerate(parsed_sentence):
+    #         if parsed_token[0] == 'nsubj':
+    #             if finite_verb_count > 0:
+    #                 previous_token_index = parsed_token[2] - 1
+    #                 if tagged_sentence[previous_token_index][1].isalpha() and tagged_sentence[previous_token_index][1] != 'CC' and tagged_sentence[previous_token_index][1] != 'IN':
+    #                     finite_verb_count += 1
+    #                     print(parsed_token)
+    #                     print(tagged_sentence[previous_token_index:])
+    #             else:
+    #                 finite_verb_count += 1
+    #
+    #     if finite_verb_count > 1:
+    #         print(sentence)
+    #         print(tagged_sentence)
+    #         print(parsed_sentence)
 
-    ''' Processing based on POS tags and finite verb '''
-    for sentence_index, sentence in enumerate(dot_processed_sentences):
-        ''' Get the pos tag in each sentence after tokenizing it'''
-        tagged_sentences.append(pos_tag(word_tokenize(sentence.strip())))
 
-        ''' To process the sentences more by POS tags and capitalization '''
-        for tagged_token_index, tagged_token in enumerate(tagged_sentences[sentence_index]):
-            if tagged_token_index != 0: # Ignore 1st word
-                '''
-                    The previous tag should be alpha and not characters (: , ")
-                    and it shouldn't be CC (coordinate conjunction) or IN (subordinate conjunction)
-                    otherwise it will be a valid sentence.
-                '''
-                if tagged_sentences[sentence_index][tagged_token_index - 1][1].isalpha() and tagged_sentences[sentence_index][tagged_token_index - 1][1] != 'CC' and tagged_sentences[sentence_index][tagged_token_index - 1][1] != 'IN':
-                    '''
-                        Capitalization logic. If the word is capitalized and not an I or proper noun or noun then new sentence
-                        (Doesn't work. Only 2 percent accuracy. will have more negative effect than positive)
 
-                    # if tagged_token[0][0].isupper() and tagged_token[0] != 'I' and tagged_token[1] != 'NNP'
-                    if tagged_token[0][0].isupper() and tagged_token[0] != 'I' and tagged_token[1] != 'NNP' and tagged_token[1] != 'NN' and tagged_token[1] != 'NNS':
-                        # temp_flag = True
-                        print(filename)
-                        print(tagged_sentences[sentence_index][tagged_token_index - 1][1])
-                        print(tagged_sentences[sentence_index])
-                        print(sentence)
-                        print(tagged_token)
-
-                    '''
-                    pass
+        # ''' To process the sentences more by POS tags and capitalization '''
+        # for tagged_token_index, tagged_token in enumerate(tagged_sentence):
+        #     if tagged_token_index != 0: # Ignore 1st word
+        #         '''
+        #             The previous tag should be alpha and not characters (: , ")
+        #             and it shouldn't be CC (coordinate conjunction) or IN (subordinate conjunction)
+        #             otherwise it will be a valid sentence.
+        #         '''
+        #         if tagged_sentence[tagged_token_index - 1][1].isalpha() and tagged_sentence[tagged_token_index - 1][1] != 'CC' and tagged_sentence[tagged_token_index - 1][1] != 'IN':
+        #             '''
+        #                 Capitalization logic. If the word is capitalized and not an I or proper noun or noun then new sentence
+        #                 (Doesn't work. Only 2 percent accuracy. will have more negative effect than positive)
+        #
+        #             # if tagged_token[0][0].isupper() and tagged_token[0] != 'I' and tagged_token[1] != 'NNP'
+        #             if tagged_token[0][0].isupper() and tagged_token[0] != 'I' and tagged_token[1] != 'NNP' and tagged_token[1] != 'NN' and tagged_token[1] != 'NNS':
+        #                 # temp_flag = True
+        #                 print(filename)
+        #                 print(tagged_sentences[sentence_index][tagged_token_index - 1][1])
+        #                 print(tagged_sentences[sentence_index])
+        #                 print(sentence)
+        #                 print(tagged_token)
+        #
+        #             '''
+        #             pass
 
     if temp_flag and filename_index > 0:
         print('------------------------------------------------------------------------------------')
@@ -96,10 +123,35 @@ for filename_index, filename in enumerate(filenames):
     file = open(filepath, 'r')
     one_essay = file.read()
 
-    count_sentences()
+    len = count_sentences()
 
     print("******************ENd of", filename_index, "essay *********************************************")
     file.close()
-    if filename_index == 90:
-        # break
+    if filename_index == 0:
+        break
         pass
+
+csv_file = open('essays_dataset/index.csv', 'r')
+line_index = 0
+
+for line in csv_file:
+    if line_index != 0:
+        line_list = line.split(';')
+        filepath = 'essays_dataset/essays/' + line_list[0]
+
+        ''' Read file '''
+        essay_file = open(filepath, 'r')
+        one_essay = file.read()
+
+        len = count_sentences()
+
+        print("******************ENd of", filename_index, "essay *********************************************")
+
+        essay_file.close()
+        if line_index == 1:
+            break
+            pass
+    line_index += 1
+
+csv_file.close()
+nlp.close()
