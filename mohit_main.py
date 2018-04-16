@@ -4,12 +4,11 @@ from nltk.tokenize import word_tokenize
 from nltk import pos_tag
 import os
 import re
-import csv
 
 from stanfordcorenlp import StanfordCoreNLP
 
-nlp = StanfordCoreNLP(r'../stanford-corenlp-full-2017-06-09')
-sentence = 'She was waiting in the room but he came in.'
+# nlp = StanfordCoreNLP(r'../stanford-corenlp-full-2017-06-09')
+# sentence = 'She was waiting in the room but he came in.'
 
 
 def count_sentences():
@@ -50,6 +49,11 @@ def count_sentences():
 
         for dot_sentence in temp_sentences_list:
             dot_processed_sentences.append(dot_sentence)
+
+
+    if len(dot_processed_sentences) != len(processed_sentences):
+        # print(len(dot_processed_sentences), len(processed_sentences))
+        pass
 
 
     temp_flag = False
@@ -112,27 +116,12 @@ def count_sentences():
         print('************************************************************************************************************************************************')
 
 
-''' Get the list of filenames to iterate over one by one'''
-filenames = os.listdir('essays_dataset/essays/')
-# filename = 'essays_dataset/essays/' + '38209.txt'
-print(len(filenames))
-for filename_index, filename in enumerate(filenames):
-    filepath = 'essays_dataset/essays/' + filename
-
-    ''' Read file '''
-    file = open(filepath, 'r')
-    one_essay = file.read()
-
-    len = count_sentences()
-
-    print("******************ENd of", filename_index, "essay *********************************************")
-    file.close()
-    if filename_index == 0:
-        break
-        pass
 
 csv_file = open('essays_dataset/index.csv', 'r')
 line_index = 0
+
+total_essay = [0, 0] # [low high]
+avg_essay_length = [0, 0] # [low high]
 
 for line in csv_file:
     if line_index != 0:
@@ -141,17 +130,26 @@ for line in csv_file:
 
         ''' Read file '''
         essay_file = open(filepath, 'r')
-        one_essay = file.read()
+        one_essay = essay_file.read()
 
-        len = count_sentences()
-
-        print("******************ENd of", filename_index, "essay *********************************************")
+        essay_len = count_sentences()
+        if line_list[2].strip().lower() == 'low':
+            # print('low')
+            total_essay[0] += 1
+            avg_essay_length[0] += essay_len
+        else:
+            # print('High')
+            total_essay[1] += 1
+            avg_essay_length[1] += essay_len
+        print(essay_len)
+        print("******************ENd of", line_index, "essay *********************************************")
 
         essay_file.close()
-        if line_index == 1:
+        if line_index == 30:
             break
             pass
     line_index += 1
 
 csv_file.close()
-nlp.close()
+print(total_essay, avg_essay_length)
+# nlp.close()
