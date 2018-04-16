@@ -152,4 +152,7 @@ for line in csv_file:
 
 csv_file.close()
 print(total_essay, avg_essay_length)
+avg_essay_length[0] = avg_essay_length[0]/total_essay[0]
+avg_essay_length[1] = avg_essay_length[1]/total_essay[1]
+print(total_essay, avg_essay_length)
 # nlp.close()
