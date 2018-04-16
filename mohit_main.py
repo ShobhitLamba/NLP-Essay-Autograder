@@ -6,7 +6,6 @@ import os
 import re
 
 def count_sentences():
-    temp_flag = False
 
     ''' Get the list of sentences'''
     sentences = sent_tokenize(one_essay)
@@ -20,14 +19,36 @@ def count_sentences():
         for split_sentence in temp_sentence.split('\n'):
             processed_sentences.append(split_sentence.strip())
 
+    ''' if a dot has a alpha after it, consider it as a new line '''
+    dot_processed_sentences = []
     for sentence_index, sentence in enumerate(processed_sentences):
-        temp_sentence = sentence.strip('.')
-        if temp_sentence.find('.') != -1:
-            # print(temp_sentence)
-            # print('###############################################')
-            pass
-            # temp_flag = True
+        temp_sentence = sentence
+        temp_sentences_list = []
+        dot_index = 0
+        while dot_index < len(temp_sentence) - 1:
+            dot_index = temp_sentence.find('.', dot_index)
+            if dot_index == -1:
+                temp_sentences_list.append(temp_sentence)
+                break
+            ''' if the next char after . is alpha and there should be atleast 2 characters after the . '''
+            if dot_index < len(temp_sentence) - 3:
+                if temp_sentence[dot_index + 1].isalpha() and temp_sentence[dot_index - 1] != '.':
+                    temp_sentences_list.append(temp_sentence[:dot_index+1])
+                    temp_sentence = temp_sentence[dot_index+1:]
+                    dot_index = 0
+            else:
+                temp_sentences_list.append(temp_sentence)
+                break
+            dot_index = dot_index + 1
 
+        for dot_sentence in temp_sentences_list:
+            dot_processed_sentences.append(dot_sentence)
+
+
+    temp_flag = False
+
+    ''' Processing based on POS tags and finite verb '''
+    for sentence_index, sentence in enumerate(dot_processed_sentences):
         ''' Get the pos tag in each sentence after tokenizing it'''
         tagged_sentences.append(pos_tag(word_tokenize(sentence.strip())))
 
@@ -42,14 +63,19 @@ def count_sentences():
                 if tagged_sentences[sentence_index][tagged_token_index - 1][1].isalpha() and tagged_sentences[sentence_index][tagged_token_index - 1][1] != 'CC' and tagged_sentences[sentence_index][tagged_token_index - 1][1] != 'IN':
                     '''
                         Capitalization logic. If the word is capitalized and not an I or proper noun or noun then new sentence
-                    '''
-                    if tagged_token[0][0].isupper():
-                    # if tagged_token[0][0].isupper() and tagged_token[0] != 'I' and tagged_token[1] != 'NNP' and tagged_token[1] != 'NN' and tagged_token[1] != 'NNS':
+                        (Doesn't work. Only 2 percent accuracy. will have more negative effect than positive)
+
+                    # if tagged_token[0][0].isupper() and tagged_token[0] != 'I' and tagged_token[1] != 'NNP'
+                    if tagged_token[0][0].isupper() and tagged_token[0] != 'I' and tagged_token[1] != 'NNP' and tagged_token[1] != 'NN' and tagged_token[1] != 'NNS':
                         # temp_flag = True
+                        print(filename)
                         print(tagged_sentences[sentence_index][tagged_token_index - 1][1])
                         print(tagged_sentences[sentence_index])
                         print(sentence)
                         print(tagged_token)
+
+                    '''
+                    pass
 
     if temp_flag and filename_index > 0:
         print('------------------------------------------------------------------------------------')
@@ -72,8 +98,8 @@ for filename_index, filename in enumerate(filenames):
 
     count_sentences()
 
-    print("******************ENd of 1 essay *********************************************")
+    print("******************ENd of", filename_index, "essay *********************************************")
     file.close()
-    if filename_index == 30:
-        break
+    if filename_index == 90:
+        # break
         pass
