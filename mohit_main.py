@@ -7,12 +7,14 @@ import re
 
 from stanfordcorenlp import StanfordCoreNLP
 
+nlp = StanfordCoreNLP('http://localhost', port=9000)
 # nlp = StanfordCoreNLP(r'../stanford-corenlp-full-2017-06-09')
-# sentence = 'She was waiting in the room but he came in.'
+# sentence = 'She was waiting in the room and he came in.'
+# print(nlp.parse(sentence))
 
 
 def count_sentences():
-
+    length_of_essay = 0
     ''' Get the list of sentences'''
     sentences = sent_tokenize(one_essay)
     tagged_sentences = []
@@ -55,34 +57,43 @@ def count_sentences():
         # print(len(dot_processed_sentences), len(processed_sentences))
         pass
 
-
+    # return len(dot_processed_sentences)
     temp_flag = False
-    return len(dot_processed_sentences)
-    # ''' Processing based on POS tags and finite verb '''
-    # for sentence_index, sentence in enumerate(dot_processed_sentences):
-    #     ''' Get the pos tag in each sentence after tokenizing it'''
-    #     tagged_sentence = (nlp.pos_tag(sentence.strip()))
-    #     parsed_sentence = nlp.dependency_parse(sentence.strip())
-    #
-    #     finite_verb_count = 0
-    #     for parsed_token_index, parsed_token in enumerate(parsed_sentence):
-    #         if parsed_token[0] == 'nsubj':
-    #             if finite_verb_count > 0:
-    #                 previous_token_index = parsed_token[2] - 1
-    #                 if tagged_sentence[previous_token_index][1].isalpha() and tagged_sentence[previous_token_index][1] != 'CC' and tagged_sentence[previous_token_index][1] != 'IN':
-    #                     finite_verb_count += 1
-    #                     print(parsed_token)
-    #                     print(tagged_sentence[previous_token_index:])
-    #             else:
-    #                 finite_verb_count += 1
-    #
-    #     if finite_verb_count > 1:
-    #         print(sentence)
-    #         print(tagged_sentence)
-    #         print(parsed_sentence)
+
+    length_of_essay = len(dot_processed_sentences)
+    ''' Processing based on POS tags and finite verb '''
+    for sentence_index, sentence in enumerate(dot_processed_sentences):
+        ''' Get the pos tag in each sentence after tokenizing it'''
+        # parse_tree = nlp.parse(sentence.strip())
+        parse_tree = nlp.parse(sentence.strip()).split()
+        if '(SBAR' in parse_tree:
+            if parse_tree[parse_tree.index('(SBAR') + 1] == '(S':
+                length_of_essay += 1
 
 
+        # tagged_sentence = (nlp.pos_tag(sentence.strip()))
+        # parsed_sentence = nlp.dependency_parse(sentence.strip())
+        #
+        # finite_verb_count = 0
+        # for parsed_token_index, parsed_token in enumerate(parsed_sentence):
+        #     if parsed_token[0] == 'nsubj':
+        #         if finite_verb_count > 0:
+        #             previous_token_index = parsed_token[2] - 1
+        #             if tagged_sentence[previous_token_index][1].isalpha() and tagged_sentence[previous_token_index][1] != 'CC' and tagged_sentence[previous_token_index][1] != 'IN':
+        #                 finite_verb_count += 1
+        #                 print(parsed_token)
+        #                 print(tagged_sentence[previous_token_index:])
+        #         else:
+        #             finite_verb_count += 1
+        #
+        # if finite_verb_count > 1:
+        #     print(parse_tree)
+        #     print(sentence)
+        #     print(tagged_sentence)
+        #     print(parsed_sentence)
 
+
+    return length_of_essay
         # ''' To process the sentences more by POS tags and capitalization '''
         # for tagged_token_index, tagged_token in enumerate(tagged_sentence):
         #     if tagged_token_index != 0: # Ignore 1st word
@@ -145,8 +156,8 @@ for line in csv_file:
         print("******************ENd of", line_index, "essay *********************************************")
 
         essay_file.close()
-        if line_index == 30:
-            break
+        if line_index == 1:
+            # break
             pass
     line_index += 1
 
@@ -155,4 +166,4 @@ print(total_essay, avg_essay_length)
 avg_essay_length[0] = avg_essay_length[0]/total_essay[0]
 avg_essay_length[1] = avg_essay_length[1]/total_essay[1]
 print(total_essay, avg_essay_length)
-# nlp.close()
+nlp.close()
