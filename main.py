@@ -115,5 +115,29 @@ if __name__ == '__main__':
     part_i_final_scores = []
     for i in range(100):
         part_i_final_scores.append(final_score(a[i], b[i], c_i[i], c_ii[i]))        
-        
+
+    results = open('results.txt', 'w')
+    firstline = True
+    i = 0
+    for line in csv_file:
+        if line_index != 0:
+            line_list = line.split(';')
+        if firstline:
+            firstline = False
+            continue
+        else:
+            results.write(line_list[0])
+            results.write(";")
+            results.write(str(a[i]))
+            results.write(";")
+            results.write(str(b[i]))
+            results.write(";")
+            results.write(str(c_i[i]))
+            results.write(";")
+            results.write(str(c_ii[i]))
+            results.write(";0;0;0;unknown\n")
+            i += 1
+                        
+    results.close()    
     csv_file.close()
+    
