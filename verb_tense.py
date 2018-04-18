@@ -106,7 +106,7 @@ def verb_tense(dot_processed_sentences):
                 if tag[1] in verbs_with_adverb:
                     tag_sequence.append(tag[1])
                 else:
-                    print(tag_sequence)
+#                    print(tag_sequence)
                     if len(tag_sequence) == 4:
                         if (', ').join(tag_sequence) not in fourgram_rules:
                             verb_tense_errors += 1

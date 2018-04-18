@@ -14,8 +14,8 @@ from stanfordcorenlp import StanfordCoreNLP
 
 
 def count_sentences(one_essay):
-    nlp = StanfordCoreNLP('http://localhost',port=9000)
-    # nlp = StanfordCoreNLP(r'..\stanford-corenlp-full-2018-02-27')
+#    nlp = StanfordCoreNLP('http://localhost',port=9000)
+    nlp = StanfordCoreNLP(r'..\stanford-corenlp-full-2018-02-27')
     length_of_essay = 0
     ''' Get the list of sentences'''
     sentences = sent_tokenize(one_essay)
