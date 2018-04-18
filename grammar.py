@@ -10,11 +10,11 @@ def subjectVerbAgreement(text):
     tags = []
 
     pos_tags = nlp.pos_tag(text)
-    #print(len(pos_tags))
+#    print(len(pos_tags))
 
     for i in range(len(pos_tags)):
         tags.append(pos_tags[i][1])
- 
+#    print(pos_tags)
     singular_PRP = ['I', 'You', 'They', 'We', 'i', 'you', 'they', 'we'] 
     plural_PRP = ['He', 'She', 'It', 'he', 'she', 'it']
     
@@ -23,7 +23,7 @@ def subjectVerbAgreement(text):
     sub_verb_errors = 0
 
     # Checking sub_verb_errors for Pronouns
-    for i in range(len(pos_tags)):
+    for i in range(len(pos_tags) - 1):
         if pos_tags[i][0] in singular_PRP and pos_tags[i+1][1] == 'VBZ':
             sub_verb_errors += 1
         
