@@ -1,23 +1,24 @@
-import nltk
+#import nltk
 from nltk.tokenize import sent_tokenize
-from nltk.tokenize import word_tokenize
-from nltk import pos_tag
-import os
-import re
+#from nltk.tokenize import word_tokenize
+#from nltk import pos_tag
+#import os
+#import re
 
 from stanfordcorenlp import StanfordCoreNLP
 
-nlp = StanfordCoreNLP('http://localhost', port=9000)
+
 # nlp = StanfordCoreNLP(r'../stanford-corenlp-full-2017-06-09')
 # sentence = 'She was waiting in the room and he came in.'
 # print(nlp.parse(sentence))
 
 
-def count_sentences():
+def count_sentences(one_essay):
+    nlp = StanfordCoreNLP(r'..\stanford-corenlp-full-2018-02-27')
     length_of_essay = 0
     ''' Get the list of sentences'''
     sentences = sent_tokenize(one_essay)
-    tagged_sentences = []
+    #tagged_sentences = []
     processed_sentences = []
 
     ''' Convert all the sentences which have new line char into multiple sentences '''
@@ -58,7 +59,7 @@ def count_sentences():
         pass
 
     # return len(dot_processed_sentences)
-    temp_flag = False
+#    temp_flag = False
 
     length_of_essay = len(dot_processed_sentences)
     ''' Processing based on POS tags and finite verb '''
@@ -92,7 +93,7 @@ def count_sentences():
         #     print(tagged_sentence)
         #     print(parsed_sentence)
 
-
+    nlp.close()
     return length_of_essay
         # ''' To process the sentences more by POS tags and capitalization '''
         # for tagged_token_index, tagged_token in enumerate(tagged_sentence):
@@ -119,51 +120,52 @@ def count_sentences():
         #             '''
         #             pass
 
-    if temp_flag and filename_index > 0:
-        print('------------------------------------------------------------------------------------')
-        print(filename)
-        print(sentences)
-        print(one_essay)
-        print('************************************************************************************************************************************************')
+#    if temp_flag and filename_index > 0:
+#        print('------------------------------------------------------------------------------------')
+#        print(filename)
+#        print(sentences)
+#        print(one_essay)
+#        print('************************************************************************************************************************************************')
 
 
 
-csv_file = open('essays_dataset/index.csv', 'r')
-line_index = 0
+#csv_file = open('essays_dataset/index.csv', 'r')
+#line_index = 0
+#
+#total_essay = [0, 0] # [low high]
+#avg_essay_length = [0, 0] # [low high]
+#
+#for line in csv_file:
+#    if line_index != 0:
+#        line_list = line.split(';')
+#        filepath = 'essays_dataset/essays/' + line_list[0]
+#
+#        ''' Read file '''
+#        essay_file = open(filepath, 'r')
+#        one_essay = essay_file.read()
+#
+#        essay_len = count_sentences()
+#        if line_list[2].strip().lower() == 'low':
+#            # print('low')
+#            total_essay[0] += 1
+#            avg_essay_length[0] += essay_len
+#        else:
+#            # print('High')
+#            total_essay[1] += 1
+#            avg_essay_length[1] += essay_len
+#        print(essay_len)
+#        print("******************End of", line_index, "essay *********************************************")
+#
+#        essay_file.close()
+#        if line_index == 1:
+#            # break
+#            pass
+#    line_index += 1
+#
+#csv_file.close()
+#print(total_essay, avg_essay_length)
+#avg_essay_length[0] = avg_essay_length[0]/total_essay[0]
+#avg_essay_length[1] = avg_essay_length[1]/total_essay[1]
+#print(total_essay, avg_essay_length)
 
-total_essay = [0, 0] # [low high]
-avg_essay_length = [0, 0] # [low high]
-
-for line in csv_file:
-    if line_index != 0:
-        line_list = line.split(';')
-        filepath = 'essays_dataset/essays/' + line_list[0]
-
-        ''' Read file '''
-        essay_file = open(filepath, 'r')
-        one_essay = essay_file.read()
-
-        essay_len = count_sentences()
-        if line_list[2].strip().lower() == 'low':
-            # print('low')
-            total_essay[0] += 1
-            avg_essay_length[0] += essay_len
-        else:
-            # print('High')
-            total_essay[1] += 1
-            avg_essay_length[1] += essay_len
-        print(essay_len)
-        print("******************ENd of", line_index, "essay *********************************************")
-
-        essay_file.close()
-        if line_index == 1:
-            # break
-            pass
-    line_index += 1
-
-csv_file.close()
-print(total_essay, avg_essay_length)
-avg_essay_length[0] = avg_essay_length[0]/total_essay[0]
-avg_essay_length[1] = avg_essay_length[1]/total_essay[1]
-print(total_essay, avg_essay_length)
-nlp.close()
+#part_a, part_c_i = count_sentences("I am a boy. You are a girl.")
