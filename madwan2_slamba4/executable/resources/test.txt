@@ -1,0 +1,5 @@
+Congrats you have successfully loaded test.txt using relative path!
+
+You should access this file using relative path NOT absolute path. For Python, you can check nltkdemo.py code to see how I accessed this folder using relative path.
+
+
