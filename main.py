@@ -91,18 +91,29 @@ if __name__ == '__main__':
         
     for i in range(100):
         spellings_N[i] *= 4 
+        spellings_N[i] = round(spellings_N[i])
         if c_i_errors_N[i] == 5:
             c_i_score.append(1)
         else:
-            c_i_score.append(5 - 4 * c_i_errors_N[i])
+            c_i_score.append(round(5 - 4 * c_i_errors_N[i]))
             
         if c_ii_errors_N[i] == 5:
             c_ii_score.append(1)
         else:
-            c_ii_score.append(5 - 4 * c_ii_errors_N[i]) 
+            c_ii_score.append(round(5 - 4 * c_ii_errors_N[i])) 
             
         if essay_lengths_N[i] == 5:
             essay_lengths_score.append(1)
         else:
-            essay_lengths_score.append(5 - 4 * essay_lengths_N[i])    
+            essay_lengths_score.append(round(5 - 4 * essay_lengths_N[i]))   
+            
+    a = essay_lengths_score
+    b = spellings_N
+    c_i = c_i_score
+    c_ii = c_ii_score        
+    
+    part_i_final_scores = []
+    for i in range(100):
+        part_i_final_scores.append(final_score(a[i], b[i], c_i[i], c_ii[i]))        
+        
     csv_file.close()
