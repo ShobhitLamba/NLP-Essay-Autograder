@@ -4,7 +4,7 @@ import re
 from stanfordcorenlp import StanfordCoreNLP
 
 def subjectVerbAgreement(text):
-    nlp = StanfordCoreNLP(r'C:\Academic\NLP\stanford-corenlp-full-2018-02-27')
+    nlp = StanfordCoreNLP(r'..\stanford-corenlp-full-2018-02-27')
     text = re.sub('[^A-Za-z0-9]+', ' ', text)
 
     tags = []
@@ -46,7 +46,7 @@ def subjectVerbAgreement(text):
     
     nlp.close()         
     
-    #print(sub_verb_errors)
+#    print(sub_verb_errors)
     return sub_verb_errors
 
 #subjectVerbAgreement("We is a boy. He am a boy.")
