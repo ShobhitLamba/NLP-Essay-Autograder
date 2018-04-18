@@ -14,7 +14,8 @@ from stanfordcorenlp import StanfordCoreNLP
 
 
 def count_sentences(one_essay):
-    nlp = StanfordCoreNLP(r'..\stanford-corenlp-full-2018-02-27')
+    nlp = StanfordCoreNLP('http://localhost',port=9000)
+    # nlp = StanfordCoreNLP(r'..\stanford-corenlp-full-2018-02-27')
     length_of_essay = 0
     ''' Get the list of sentences'''
     sentences = sent_tokenize(one_essay)
@@ -94,7 +95,7 @@ def count_sentences(one_essay):
         #     print(parsed_sentence)
 
     nlp.close()
-    return length_of_essay
+    return length_of_essay, dot_processed_sentences
         # ''' To process the sentences more by POS tags and capitalization '''
         # for tagged_token_index, tagged_token in enumerate(tagged_sentence):
         #     if tagged_token_index != 0: # Ignore 1st word
