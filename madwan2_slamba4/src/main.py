@@ -4,7 +4,6 @@ from sentence import count_sentences
 from spelling import spellcheck
 from grammar import subjectVerbAgreement
 from verb_tense import verb_tense
-
 import nltk
 
 nltk.download('wordnet')
@@ -12,6 +11,9 @@ nltk.download('punkt')
 nltk.download('averaged_perceptron_tagger')
 nltk.download('maxent_ne_chunker')
 nltk.download('treebank')
+
+from stanfordcorenlp import StanfordCoreNLP
+nlp = StanfordCoreNLP('http://localhost',port=9000)
 
 def final_score(part_a, part_b, part_c_i, part_c_ii):
     # considering part_c_iii, part_d_i and part_d_ii to be zero for part 1 of project
@@ -50,22 +52,22 @@ if __name__ == '__main__':
             essay_file = open(filepath, 'r')
             one_essay = essay_file.read()
 
-            part_a = count_sentences(one_essay)
-            part_a, dot_processed_sentences = count_sentences(one_essay)
+            # part_a = count_sentences(one_essay)
+            part_a, dot_processed_sentences = count_sentences(one_essay, nlp)
 
             part_b = spellcheck(one_essay)
             essay_lengths.append(part_a)
             spellings.append(part_b)
-            part_c_i_error = subjectVerbAgreement(one_essay)
-#            for sentence in sentences:
-#                part_c_i += subjectVerbAgreement(sentence)
+            part_c_i_error = subjectVerbAgreement(one_essay, nlp)
+           # for sentence in sentences:
+               # part_c_i += subjectVerbAgreement(sentence)
 
             c_i_errors.append(part_c_i_error)
 
             # if line_index == 3:
             part_c_ii_error = verb_tense(dot_processed_sentences)
-#            for sentence in sentences:
-#                part_c_i += subjectVerbAgreement(sentence)
+           # for sentence in sentences:
+               # part_c_i += subjectVerbAgreement(sentence)
             c_ii_errors.append(part_c_ii_error)
 
             if line_list[2].strip().lower() == 'low':
@@ -78,9 +80,6 @@ if __name__ == '__main__':
                 grades.append('high')
             essay_file.close()
             print("Done with essay ", line_list[0])
-            if line_index == 1:
-                # break
-                pass
 
         if line_index == 3:
             # break
@@ -124,27 +123,96 @@ if __name__ == '__main__':
     for i in range(100):
         part_i_final_scores.append(final_score(a[i], b[i], c_i[i], c_ii[i]))
 
-    results = open('../output/results.txt', 'w')
-    firstline = True
-    i = 0
-    for line in csv_file:
-        if line_index != 0:
-            line_list = line.split(';')
-        if firstline:
-            firstline = False
-            continue
-        else:
-            results.write(line_list[0])
-            results.write(";")
-            results.write(str(a[i]))
-            results.write(";")
-            results.write(str(b[i]))
-            results.write(";")
-            results.write(str(c_i[i]))
-            results.write(";")
-            results.write(str(c_ii[i]))
-            results.write(";0;0;0;unknown\n")
-            i += 1
+    # results = open('../output/results.txt', 'w')
+    # firstline = True
+    # i = 0
+    # for line in csv_file:
+    #     if firstline:
+    #         firstline = False
+    #         continue
+    #     else:
+    #         line_list = line.split(';')
+    #         results.write(line_list[0])
+    #         results.write(";")
+    #         results.write(str(a[i]))
+    #         results.write(";")
+    #         results.write(str(b[i]))
+    #         results.write(";")
+    #         results.write(str(c_i[i]))
+    #         results.write(";")
+    #         results.write(str(c_ii[i]))
+    #         results.write(";0;0;0;",part_i_final_scores[i],";unknown\n")
+    #         i += 1
 
-    results.close()
+    # results.close()
     csv_file.close()
+
+test_csv_file = open(r'../input/testing/index.csv', 'r')
+results = open('../output/results.txt', 'w')
+# firstline = True
+test_a = 0
+test_b = 0
+test_c_i = 0
+test_c_ii = 0
+i = 0
+test_line_index = 0
+for line in test_csv_file:
+    if test_line_index != 0:
+        line_list = line.split(';')
+        filepath = '../input/testing/essays/' + line_list[0]
+
+        ''' Read file '''
+        essay_file = open(filepath, 'r')
+        one_essay = essay_file.read()
+
+        # part_a = count_sentences(one_essay)
+        part_a, dot_processed_sentences = count_sentences(one_essay, nlp)
+        part_b = spellcheck(one_essay)
+        part_c_i_error = subjectVerbAgreement(one_essay, nlp)
+        part_c_ii_error = verb_tense(dot_processed_sentences)
+
+        test_a = (part_a -  min(essay_lengths)) / (max(essay_lengths) - min(essay_lengths))
+        test_b = (part_b - min(spellings)) / (max(spellings) - min(spellings))
+        test_c_i = (part_c_i_error - min(c_i_errors)) / (max(c_i_errors) - min(c_i_errors))
+        test_c_ii = (part_c_ii_error - min(c_ii_errors)) / (max(c_ii_errors) - min(c_ii_errors))
+
+        test_b *= 4
+        test_b = round(test_b)
+        if test_c_i == 5:
+            test_c_i = 1
+        else:
+            test_c_i = round(5 - 4 * test_c_i)
+
+        if test_c_ii == 5:
+            test_c_ii = 1
+        else:
+            test_c_ii = round(5 - 4 * test_c_ii)
+
+        if test_a == 5:
+            test_a = 1
+        else:
+            test_a = round(5 - 4 * test_a)
+
+        test_final_score = final_score(test_a, test_b, test_c_i, test_c_ii)
+        
+        results.write(line_list[0])
+        results.write(";")
+        results.write(str(test_a))
+        results.write(";")
+        results.write(str(test_b))
+        results.write(";")
+        results.write(str(test_c_i))
+        results.write(";")
+        results.write(str(test_c_ii))
+        results.write(";0;0;0;")
+        results.write(str(test_final_score))
+        results.write(";unknown\n")
+
+        print("Done with test essay ", line_list[0])
+
+    test_line_index += 1
+
+
+test_csv_file.close()
+results.close()
+nlp.close()

@@ -1,11 +1,11 @@
 # author: Shobhit Lamba
 
 import re
-from stanfordcorenlp import StanfordCoreNLP
+# from stanfordcorenlp import StanfordCoreNLP
 
-def subjectVerbAgreement(text):
+def subjectVerbAgreement(text, nlp):
     # nlp = StanfordCoreNLP(r'..\stanford-corenlp-full-2018-02-27')
-    nlp = StanfordCoreNLP('http://localhost',port=9000)
+    # nlp = StanfordCoreNLP('http://localhost',port=9000)
     text = re.sub('[^A-Za-z0-9]+', ' ', text)
 
     tags = []
@@ -45,7 +45,7 @@ def subjectVerbAgreement(text):
     sub_verb_errors += tags.count("'NN', 'WDT', 'VBP'")
     sub_verb_errors += tags.count("'NNS', 'WDT', 'VBZ'")
 
-    nlp.close()
+    # nlp.close()
 
 #    print(sub_verb_errors)
     return sub_verb_errors

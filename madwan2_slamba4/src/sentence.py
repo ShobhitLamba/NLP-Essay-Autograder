@@ -5,7 +5,7 @@ from nltk.tokenize import sent_tokenize
 #import os
 #import re
 
-from stanfordcorenlp import StanfordCoreNLP
+# from stanfordcorenlp import StanfordCoreNLP
 
 
 # nlp = StanfordCoreNLP(r'../stanford-corenlp-full-2017-06-09')
@@ -13,8 +13,8 @@ from stanfordcorenlp import StanfordCoreNLP
 # print(nlp.parse(sentence))
 
 
-def count_sentences(one_essay):
-    nlp = StanfordCoreNLP('http://localhost',port=9000)
+def count_sentences(one_essay, nlp):
+    # nlp = StanfordCoreNLP('http://localhost',port=9000)
     # nlp = StanfordCoreNLP(r'..\stanford-corenlp-full-2018-02-27')
     length_of_essay = 0
     ''' Get the list of sentences'''
@@ -94,7 +94,7 @@ def count_sentences(one_essay):
         #     print(tagged_sentence)
         #     print(parsed_sentence)
 
-    nlp.close()
+    # nlp.close()
     return length_of_essay, dot_processed_sentences
         # ''' To process the sentences more by POS tags and capitalization '''
         # for tagged_token_index, tagged_token in enumerate(tagged_sentence):

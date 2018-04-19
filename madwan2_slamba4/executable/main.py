@@ -176,8 +176,25 @@ for line in test_csv_file:
         test_c_i = (part_c_i_error - min(c_i_errors)) / (max(c_i_errors) - min(c_i_errors))
         test_c_ii = (part_c_ii_error - min(c_ii_errors)) / (max(c_ii_errors) - min(c_ii_errors))
 
-        test_final_score = final_score(test_a, test_b, test_c_i, test_c_ii)
+        test_b *= 4
+        test_b = round(test_b)
+        if test_c_i == 5:
+            test_c_i = 1
+        else:
+            test_c_i = round(5 - 4 * test_c_i)
 
+        if test_c_ii == 5:
+            test_c_ii = 1
+        else:
+            test_c_ii = round(5 - 4 * test_c_ii)
+
+        if test_a == 5:
+            test_a = 1
+        else:
+            test_a = round(5 - 4 * test_a)
+
+        test_final_score = final_score(test_a, test_b, test_c_i, test_c_ii)
+        
         results.write(line_list[0])
         results.write(";")
         results.write(str(test_a))
@@ -187,7 +204,9 @@ for line in test_csv_file:
         results.write(str(test_c_i))
         results.write(";")
         results.write(str(test_c_ii))
-        results.write(";0;0;0;",test_final_score,";unknown\n")
+        results.write(";0;0;0;")
+        results.write(str(test_final_score))
+        results.write(";unknown\n")
 
         print("Done with test essay ", line_list[0])
 
