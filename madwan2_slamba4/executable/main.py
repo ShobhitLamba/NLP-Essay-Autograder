@@ -4,6 +4,7 @@ from sentence import count_sentences
 from spelling import spellcheck
 from grammar import subjectVerbAgreement
 from verb_tense import verb_tense
+from sentence_formation import check_sentence_formation
 import nltk
 
 nltk.download('wordnet')
@@ -70,6 +71,8 @@ if __name__ == '__main__':
                # part_c_i += subjectVerbAgreement(sentence)
             c_ii_errors.append(part_c_ii_error)
 
+            check_sentence_formation(dot_processed_sentences, nlp)
+
             if line_list[2].strip().lower() == 'low':
                 # print('low')
                 total_essay[0] += 1
@@ -123,29 +126,10 @@ if __name__ == '__main__':
     for i in range(100):
         part_i_final_scores.append(final_score(a[i], b[i], c_i[i], c_ii[i]))
 
-    # results = open('../output/results.txt', 'w')
-    # firstline = True
-    # i = 0
-    # for line in csv_file:
-    #     if firstline:
-    #         firstline = False
-    #         continue
-    #     else:
-    #         line_list = line.split(';')
-    #         results.write(line_list[0])
-    #         results.write(";")
-    #         results.write(str(a[i]))
-    #         results.write(";")
-    #         results.write(str(b[i]))
-    #         results.write(";")
-    #         results.write(str(c_i[i]))
-    #         results.write(";")
-    #         results.write(str(c_ii[i]))
-    #         results.write(";0;0;0;",part_i_final_scores[i],";unknown\n")
-    #         i += 1
-
-    # results.close()
     csv_file.close()
+
+
+# exit() # comment this before submitting
 
 test_csv_file = open(r'../input/testing/index.csv', 'r')
 results = open('../output/results.txt', 'w')
@@ -194,7 +178,7 @@ for line in test_csv_file:
             test_a = round(5 - 4 * test_a)
 
         test_final_score = final_score(test_a, test_b, test_c_i, test_c_ii)
-        
+
         results.write(line_list[0])
         results.write(";")
         results.write(str(test_a))
