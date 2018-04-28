@@ -7,11 +7,11 @@ from verb_tense import verb_tense
 from sentence_formation import check_sentence_formation
 import nltk
 
-nltk.download('wordnet')
-nltk.download('punkt')
-nltk.download('averaged_perceptron_tagger')
-nltk.download('maxent_ne_chunker')
-nltk.download('treebank')
+# nltk.download('wordnet')
+# nltk.download('punkt')
+# nltk.download('averaged_perceptron_tagger')
+# nltk.download('maxent_ne_chunker')
+# nltk.download('treebank')
 
 from stanfordcorenlp import StanfordCoreNLP
 nlp = StanfordCoreNLP('http://localhost',port=9000)
@@ -60,15 +60,11 @@ if __name__ == '__main__':
             essay_lengths.append(part_a)
             spellings.append(part_b)
             part_c_i_error = subjectVerbAgreement(one_essay, nlp)
-           # for sentence in sentences:
-               # part_c_i += subjectVerbAgreement(sentence)
 
             c_i_errors.append(part_c_i_error)
 
-            # if line_index == 3:
             part_c_ii_error = verb_tense(dot_processed_sentences)
-           # for sentence in sentences:
-               # part_c_i += subjectVerbAgreement(sentence)
+
             c_ii_errors.append(part_c_ii_error)
 
             check_sentence_formation(dot_processed_sentences, nlp)
@@ -84,7 +80,8 @@ if __name__ == '__main__':
             essay_file.close()
             print("Done with essay ", line_list[0])
 
-        if line_index == 3:
+        if line_index == 1:
+            # exit()
             # break
             pass
 
