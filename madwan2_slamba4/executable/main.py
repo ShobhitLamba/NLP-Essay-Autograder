@@ -15,8 +15,8 @@ from topic_coherence import topic_coherence
 # nltk.download('treebank')
 
 from stanfordcorenlp import StanfordCoreNLP
-#nlp = StanfordCoreNLP('http://localhost',port=9000)
-nlp = StanfordCoreNLP(r'C:\Academic\NLP\stanford-corenlp-full-2018-02-27')
+nlp = StanfordCoreNLP('http://localhost',port=9000)
+# nlp = StanfordCoreNLP(r'C:\Academic\NLP\stanford-corenlp-full-2018-02-27')
 
 def final_score(part_a, part_b, part_c_i, part_c_ii, part_c_iii, part_d_ii):
     # considering part_c_iii, part_d_i and part_d_ii to be zero for part 1 of project
@@ -83,7 +83,7 @@ if __name__ == '__main__':
 
             part_d_ii = topic_coherence(one_essay, line_list[1])
             topic_relevance.append(part_d_ii)
-            
+
             if line_list[2].strip().lower() == 'low':
                 # print('low')
                 total_essay[0] += 1
@@ -96,7 +96,7 @@ if __name__ == '__main__':
             print("Done with essay ", line_list[0],' ---', line_index)
 
         if line_index == 100:
-            exit()
+            # exit()
             # break
             pass
 
@@ -137,7 +137,7 @@ if __name__ == '__main__':
             essay_lengths_score.append(round(5 - 4 * essay_lengths_N[i]))
         topic_relevance_N[i] *= 4
         topic_relevance_N[i] = round(topic_relevance_N[i]) + 1
-        
+
     a = essay_lengths_score
     b = spellings_N
     c_i = c_i_score
@@ -181,14 +181,14 @@ for line in test_csv_file:
         part_c_ii_error = verb_tense(dot_processed_sentences)
         part_c_iii_error = check_sentence_formation(dot_processed_sentences, nlp)
         part_d_ii = topic_coherence(one_essay, line_list[1])
-        
+
         test_a = (part_a -  min(essay_lengths)) / (max(essay_lengths) - min(essay_lengths))
         test_b = (part_b - min(spellings)) / (max(spellings) - min(spellings))
         test_c_i = (part_c_i_error - min(c_i_errors)) / (max(c_i_errors) - min(c_i_errors))
         test_c_ii = (part_c_ii_error - min(c_ii_errors)) / (max(c_ii_errors) - min(c_ii_errors))
         test_c_iii = (part_c_iii_error - min(c_iii_errors)) / (max(c_iii_errors) - min(c_iii_errors))
         test_d_ii = (part_d_ii - min(topic_relevance)) / (max(topic_relevance) - min(topic_relevance))
-        
+
         test_b *= 4
         test_b = round(test_b)
         test_d_ii *= 4

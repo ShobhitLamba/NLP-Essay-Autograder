@@ -2,9 +2,9 @@ from nltk.tokenize import sent_tokenize
 
 incorrect_rules = [
 "(ROOT (SBAR", # (done)
-"(SBAR (S",
+"(SBAR (S", #(DONE)
 "(FRAG", #(Done)
-"(SINV (V" # starts with V
+"(SINV (V" # starts with V (DONE)
 "(ROOT !(S" # not S after root (DOne)
 ]
 
@@ -53,11 +53,11 @@ def check_sentence_formation(dot_processed_sentences, nlp):
             try:
                 if '(S' in line_parse_tree[temp_index + 1]:
                     if '(NP' not in line_parse_tree[temp_index - 1] and '(VP' not in line_parse_tree[temp_index - 1]:
-                        print('5. -------------',line_parse_tree)
-                        print(sentence)
-                        print(line_parse_tree[temp_index - 2 : temp_index + 3])
-                        print(parse_tree_string)
-                        print('*******************************')
+                        # print('5. -------------',line_parse_tree)
+                        # print(sentence)
+                        # print(line_parse_tree[temp_index - 2 : temp_index + 3])
+                        # print(parse_tree_string)
+                        # print('*******************************')
 
                         num_errors += 1
                         continue
