@@ -63,3 +63,4 @@ def check_sentence_formation(dot_processed_sentences, nlp):
                         continue
             except:
                 pass
+    return num_errors

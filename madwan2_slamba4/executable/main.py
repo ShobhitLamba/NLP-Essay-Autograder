@@ -39,6 +39,10 @@ if __name__ == '__main__':
     c_ii_errors_N = []
     c_ii_score = []
 
+    c_iii_errors = []
+    c_iii_errors_N = []
+    c_iii_score = []
+
     part_a = 0
     part_b = 0
     part_c_i_error = 0
@@ -67,7 +71,9 @@ if __name__ == '__main__':
 
             c_ii_errors.append(part_c_ii_error)
 
-            check_sentence_formation(dot_processed_sentences, nlp)
+            part_c_iii_error = check_sentence_formation(dot_processed_sentences, nlp)
+
+            c_iii_errors.append(part_c_iii_error)
 
             if line_list[2].strip().lower() == 'low':
                 # print('low')
@@ -95,6 +101,7 @@ if __name__ == '__main__':
         essay_lengths_N.append((essay_lengths[i] - min(essay_lengths)) / (max(essay_lengths) - min(essay_lengths)))
         c_i_errors_N.append((c_i_errors[i] - min(c_i_errors)) / (max(c_i_errors) - min(c_i_errors)))
         c_ii_errors_N.append((c_ii_errors[i] - min(c_ii_errors)) / (max(c_ii_errors) - min(c_ii_errors)))
+        c_iii_errors_N.append((c_iii_errors[i] - min(c_iii_errors)) / (max(c_iii_errors) - min(c_iii_errors)))
 
     for i in range(100):
         spellings_N[i] *= 4
@@ -109,6 +116,11 @@ if __name__ == '__main__':
         else:
             c_ii_score.append(round(5 - 4 * c_ii_errors_N[i]))
 
+        if c_iii_errors_N[i] == 5:
+            c_iii_score.append(1)
+        else:
+            c_iii_score.append(round(5 - 4 * c_iii_errors_N[i]))
+
         if essay_lengths_N[i] == 5:
             essay_lengths_score.append(1)
         else:
@@ -118,6 +130,7 @@ if __name__ == '__main__':
     b = spellings_N
     c_i = c_i_score
     c_ii = c_ii_score
+    c_iii = c_iii_score
 
     part_i_final_scores = []
     for i in range(100):
