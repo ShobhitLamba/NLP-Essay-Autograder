@@ -87,7 +87,7 @@ if __name__ == '__main__':
             print("Done with essay ", line_list[0],' ---', line_index)
 
         if line_index == 100:
-            exit()
+            # exit()
             # break
             pass
 
