@@ -161,7 +161,7 @@ if __name__ == '__main__':
 #            results.write(str(line_list[2]))
 #            results.write("\n")
 #            i += 1
-    results.close()
+#    results.close()
     csv_file.close()
 
 test_csv_file = open(r'../input/testing/index.csv', 'r')
