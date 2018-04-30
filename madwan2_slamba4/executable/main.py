@@ -165,7 +165,7 @@ for line in test_csv_file:
         part_b = spellcheck(one_essay)
         part_c_i_error = subjectVerbAgreement(one_essay, nlp)
         part_c_ii_error = verb_tense(dot_processed_sentences)
-        part_c_iii_error = check_sentence_formation(dot_processed_sentences)
+        part_c_iii_error = check_sentence_formation(dot_processed_sentences, nlp)
 
         test_a = (part_a -  min(essay_lengths)) / (max(essay_lengths) - min(essay_lengths))
         test_b = (part_b - min(spellings)) / (max(spellings) - min(spellings))
