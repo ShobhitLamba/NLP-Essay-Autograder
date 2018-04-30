@@ -148,6 +148,7 @@ test_a = 0
 test_b = 0
 test_c_i = 0
 test_c_ii = 0
+test_c_iii = 0
 i = 0
 test_line_index = 0
 for line in test_csv_file:
@@ -164,11 +165,13 @@ for line in test_csv_file:
         part_b = spellcheck(one_essay)
         part_c_i_error = subjectVerbAgreement(one_essay, nlp)
         part_c_ii_error = verb_tense(dot_processed_sentences)
+        part_c_iii_error = check_sentence_formation(dot_processed_sentences)
 
         test_a = (part_a -  min(essay_lengths)) / (max(essay_lengths) - min(essay_lengths))
         test_b = (part_b - min(spellings)) / (max(spellings) - min(spellings))
         test_c_i = (part_c_i_error - min(c_i_errors)) / (max(c_i_errors) - min(c_i_errors))
         test_c_ii = (part_c_ii_error - min(c_ii_errors)) / (max(c_ii_errors) - min(c_ii_errors))
+        test_c_iii = (part_c_iii_error - min(c_iii_errors)) / (max(c_iii_errors) - min(c_iii_errors))
 
         test_b *= 4
         test_b = round(test_b)
@@ -181,6 +184,11 @@ for line in test_csv_file:
             test_c_ii = 1
         else:
             test_c_ii = round(5 - 4 * test_c_ii)
+
+        if test_c_iii == 5:
+            test_c_iii = 1
+        else:
+            test_c_iii = round(5 - 4 * test_c_iii)
 
         if test_a == 5:
             test_a = 1
@@ -198,7 +206,9 @@ for line in test_csv_file:
         results.write(str(test_c_i))
         results.write(";")
         results.write(str(test_c_ii))
-        results.write(";0;0;0;")
+        results.write(";")
+        results.write(str(test_c_iii))
+        results.write(";0;0;")
         results.write(str(test_final_score))
         results.write(";unknown\n")
 
