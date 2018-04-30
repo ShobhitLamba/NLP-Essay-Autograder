@@ -103,29 +103,27 @@ relevant_words = [["agree","Agree",
         "tour","Tour",
         "guide","Guide"]]
 
-topic_list = ["Do you agree or disagree with the following statement? In twenty years there will be fewer cars in use than there are today. Use reasons and examples to support your answer.",
-              "Do you agree or disagree with the following statement? Young people enjoy life more than older people do. Use specific reasons and examples to support your answer.",
-              "Do you agree or disagree with the following statement? Young people enjoy life more than older people do. Use specific reasons and examples to support your answer.",
-              "Do you agree or disagree with the following statement? It is better to have broad knowledge of many academic subjects than to specialize in one specific subject. Use specific reasons and examples to support your answer.",
-              "Do you agree or disagree with the following statement? Most advertisements make products seem much better than they really are. Use specific reasons and examples to support your answer.",
-              "Do you agree or disagree with the following statement? It is more important for students to understand ideas and concepts than it is for them to learn facts. Use reasons and examples to support your answer.",
-              "Do you agree or disagree with the following statement? Successful people try new things and take risks rather than only doing what they already know how to do well. Use reasons and examples to support your answer.",
-              "Do you agree or disagree with the following statement? The best way to travel is in a group led by a tour guide. Use reasons and examples to support your answer."]
+topic_keyword = ["twenty","time","older","advertisements","knowledge","ideas","Successful","tour"]
+
 def topic_coherence(text, topic):
     text = re.sub('[^A-Za-z]+', ' ', text)
     stop_words = set(stopwords.words('english'))
     tokens = nltk.word_tokenize(text)
     tokens = [w for w in tokens if not w in stop_words]
     count = 0
+    
+    topic = re.sub('[^A-Za-z]+', ' ', topic)
+    topic_tokens = nltk.word_tokenize(topic)
 
-    for i in topic_list:
-        if topic_list[i] == topic:
+    for i in range(len(topic_keyword)):
+        if topic_keyword[i] in topic_tokens:
             for j in relevant_words[i]:
                 for token in tokens:
-                    if i == token:
+                    if j == token:
                         count += 1
-
-    csv_file.close()
+    
     return count
 
+#text = "I completely agree with the statement 'most advertisements make products seem much better than they really are.'"
+#topic = "Do you agree or disagree with the following statement?		Most advertisements make products seem much better than they really are.		Use specific reasons and examples to support your answer."
 #topic_coherence(text, topic)

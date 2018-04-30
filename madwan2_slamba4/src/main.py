@@ -7,15 +7,15 @@ from verb_tense import verb_tense
 from topic_coherence import topic_coherence
 import nltk
 
-nltk.download('wordnet')
-nltk.download('punkt')
-nltk.download('averaged_perceptron_tagger')
-nltk.download('maxent_ne_chunker')
-nltk.download('treebank')
-nltk.download('stopwords')
+#nltk.download('wordnet')
+#nltk.download('punkt')
+#nltk.download('averaged_perceptron_tagger')
+#nltk.download('maxent_ne_chunker')
+#nltk.download('treebank')
+#nltk.download('stopwords')
 
 from stanfordcorenlp import StanfordCoreNLP
-nlp = StanfordCoreNLP(r'..\stanford-corenlp-full-2018-02-27')
+nlp = StanfordCoreNLP(r'C:\Academic\NLP\stanford-corenlp-full-2018-02-27')
 
 def final_score(part_a, part_b, part_c_i, part_c_ii, part_d_ii):
     # considering part_c_iii and part_d_ito be zero for now
@@ -41,7 +41,6 @@ if __name__ == '__main__':
     c_ii_errors = []
     c_ii_errors_N = []
     c_ii_score = []
-    d_ii_score = []
 
     part_a = 0
     part_b = 0
@@ -78,7 +77,7 @@ if __name__ == '__main__':
 
             part_d_ii = topic_coherence(one_essay, line_list[1])
             topic_relevance.append(part_d_ii)
-            
+
             if line_list[2].strip().lower() == 'low':
                 # print('low')
                 total_essay[0] += 1
@@ -123,8 +122,8 @@ if __name__ == '__main__':
             essay_lengths_score.append(1)
         else:
             essay_lengths_score.append(round(5 - 4 * essay_lengths_N[i]))
-        topic_relevance_N[i] *= 4    
-        topic_relevance_N[i] = round(topic_relevance_N[i])    
+        topic_relevance_N[i] *= 4
+        topic_relevance_N[i] = round(topic_relevance_N[i]) + 1
 
     a = essay_lengths_score
     b = spellings_N
@@ -135,32 +134,34 @@ if __name__ == '__main__':
     part_i_final_scores = []
     for i in range(100):
         part_i_final_scores.append(final_score(a[i], b[i], c_i[i], c_ii[i], d_ii[i]))
-
-    # results = open('../output/results.txt', 'w')
-    # firstline = True
-    # i = 0
-    # for line in csv_file:
-    #     if firstline:
-    #         firstline = False
-    #         continue
-    #     else:
-    #         line_list = line.split(';')
-    #         results.write(line_list[0])
-    #         results.write(";")
-    #         results.write(str(a[i]))
-    #         results.write(";")
-    #         results.write(str(b[i]))
-    #         results.write(";")
-    #         results.write(str(c_i[i]))
-    #         results.write(";")
-    #         results.write(str(c_ii[i]))
-    #         results.write(";0;0;0;",part_i_final_scores[i])
-    #         results.write(";")
-    #         result.write(str(line_list[2]))
-    #         result.write("\n")
-    #         i += 1
-
-    # results.close()
+    
+#    results = open('../output/results_train.txt', 'w')
+#    firstline = True
+#    i = 0
+#    for line in csv_file:
+#        if firstline:
+#            firstline = False
+#            continue
+#        else:
+#            line_list = line.split(';')
+#            results.write(line_list[0])
+#            results.write(";")
+#            results.write(str(a[i]))
+#            results.write(";")
+#            results.write(str(b[i]))
+#            results.write(";")
+#            results.write(str(c_i[i]))
+#            results.write(";")
+#            results.write(str(c_ii[i]))
+#            results.write(";0;0;")
+#            results.write(str(d_ii))
+#            results.write(";")
+#            results.write(part_i_final_scores[i])
+#            results.write(";")
+#            results.write(str(line_list[2]))
+#            results.write("\n")
+#            i += 1
+    results.close()
     csv_file.close()
 
 test_csv_file = open(r'../input/testing/index.csv', 'r')
@@ -193,12 +194,12 @@ for line in test_csv_file:
         test_b = (part_b - min(spellings)) / (max(spellings) - min(spellings))
         test_c_i = (part_c_i_error - min(c_i_errors)) / (max(c_i_errors) - min(c_i_errors))
         test_c_ii = (part_c_ii_error - min(c_ii_errors)) / (max(c_ii_errors) - min(c_ii_errors))
-        test_d_ii = (part_d_ii - min(topic_relevance)) / (max(topic_relevance) - min(topic_relevance)))
+        test_d_ii = (part_d_ii - min(topic_relevance)) / (max(topic_relevance) - min(topic_relevance))
 
         test_b *= 4
         test_b = round(test_b)
         test_d_ii *= 4
-        test_d_ii = round(test_d_ii)
+        test_d_ii = round(test_d_ii) + 1
         if test_c_i == 5:
             test_c_i = 1
         else:
@@ -226,8 +227,8 @@ for line in test_csv_file:
         results.write(";")
         results.write(str(test_c_ii))
         results.write(";0;0;")
-        result.write(str(test_d_ii))
-        result.write(";")
+        results.write(str(test_d_ii))
+        results.write(";")
         results.write(str(test_final_score))
         results.write(";unknown\n")
 
