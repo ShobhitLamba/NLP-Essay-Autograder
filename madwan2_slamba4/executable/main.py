@@ -20,7 +20,9 @@ nlp = StanfordCoreNLP('http://localhost',port=9000)
 
 def final_score(part_a, part_b, part_c_i, part_c_ii, part_c_iii, part_d_ii):
     # considering part_c_iii, part_d_i and part_d_ii to be zero for part 1 of project
-    return 2 * part_a - part_b + part_c_i + part_c_ii + 2 * part_c_iii + 3 * part_d_ii
+    # return 2 * part_a - part_b + part_c_i + part_c_ii + 2 * part_c_iii + 3 * part_d_ii
+    # After using linear regression to optimize coefficients.
+    return 0.4450007 * part_a -0.20295944 * part_b + 0.11970425 * part_c_i - 0.07988807 * part_c_ii + 0.05913085 * part_c_iii + 0.05431377 * part_d_ii
 
 
 if __name__ == '__main__':
@@ -148,10 +150,9 @@ if __name__ == '__main__':
     part_i_final_scores = []
     for i in range(100):
         part_i_final_scores.append(final_score(a[i], b[i], c_i[i], c_ii[i], c_iii[i], d_ii[i]))
-
+    
     csv_file.close()
-
-
+    
 # exit() # comment this before submitting
 
 test_csv_file = open(r'../input/testing/index.csv', 'r')
@@ -211,7 +212,7 @@ for line in test_csv_file:
         if test_a == 5:
             test_a = 1
         else:
-            test_a = round(5 - 4 * test_a)
+            test_a = round(4 * test_a) + 1
 
         test_final_score = final_score(test_a, test_b, test_c_i, test_c_ii, test_c_iii, test_d_ii)
 
@@ -230,12 +231,15 @@ for line in test_csv_file:
         results.write(str(test_d_ii))
         results.write(";")
         results.write(str(test_final_score))
-        results.write(";unknown\n")
+        results.write(";")
+        if test_final_score >= 1.75:
+            results.write("high\n")
+        else:
+            results.write("low\n")
 
         print("Done with test essay ", line_list[0])
 
     test_line_index += 1
-
 
 test_csv_file.close()
 results.close()
