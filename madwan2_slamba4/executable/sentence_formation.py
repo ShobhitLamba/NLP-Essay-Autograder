@@ -8,6 +8,12 @@ incorrect_rules = [
 "(ROOT !(S" # not S after root (DOne)
 ]
 
+''' Function to check the correct sentence formation of each sentence in the essay
+Params: dot_processed_sentences - proper formatted sentencesself
+        nlp - stanfordcorenlp object
+
+returns - number of errors
+'''
 def check_sentence_formation(dot_processed_sentences, nlp):
     num_errors = 0
     for sentence in dot_processed_sentences:
