@@ -139,7 +139,7 @@ if __name__ == '__main__':
     csv_file.close()
 
 
-exit() # comment this before submitting
+# exit() # comment this before submitting
 
 test_csv_file = open(r'../input/testing/index.csv', 'r')
 results = open('../output/results.txt', 'w')
