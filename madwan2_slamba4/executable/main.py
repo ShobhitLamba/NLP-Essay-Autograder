@@ -61,7 +61,7 @@ if __name__ == '__main__':
     part_c_iii_error = 0
     part_d_ii = 0
 
-''' Read training essays based on the sequence in the csv file '''
+
     for line in csv_file:
         if line_index != 0:
             line_list = line.split(';')
