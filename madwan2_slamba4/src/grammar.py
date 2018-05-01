@@ -16,6 +16,7 @@ def subjectVerbAgreement(text, nlp):
     for i in range(len(pos_tags)):
         tags.append(pos_tags[i][1])
 #    print(pos_tags)
+# Predefined list of prepositions
     singular_PRP = ['I', 'You', 'They', 'We', 'i', 'you', 'they', 'we']
     plural_PRP = ['He', 'She', 'It', 'he', 'she', 'it']
 

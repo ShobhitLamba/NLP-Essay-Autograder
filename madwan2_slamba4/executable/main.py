@@ -8,11 +8,11 @@ from sentence_formation import check_sentence_formation
 from topic_coherence import topic_coherence
 #import nltk
 
-# nltk.download('wordnet')
-# nltk.download('punkt')
-# nltk.download('averaged_perceptron_tagger')
-# nltk.download('maxent_ne_chunker')
-# nltk.download('treebank')
+nltk.download('wordnet')
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('maxent_ne_chunker')
+nltk.download('treebank')
 ''' Wrapper for stanford corenlp '''
 from stanfordcorenlp import StanfordCoreNLP
 '''

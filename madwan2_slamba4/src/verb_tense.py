@@ -1,28 +1,31 @@
 from nltk import pos_tag
 from nltk.tokenize import word_tokenize
 
+''' First tag should be from the below list '''
 verbs = [
-	"MD",
-	"VB",
-	"VBZ",
-	"VBD",
-	"VBG",
-	"VBN",
-	"VBP",
+    "MD",
+    "VB",
+    "VBZ",
+    "VBD",
+    "VBG",
+    "VBN",
+    "VBP",
     "TO"
 ]
 
+''' Following tags should be from the below list '''
 verbs_with_adverb = [
-	"MD",
-	"VB",
-	"VBZ",
-	"VBD",
-	"VBG",
-	"VBN",
-	"VBP",
+    "MD",
+    "VB",
+    "VBZ",
+    "VBD",
+    "VBG",
+    "VBN",
+    "VBP",
     "RB"
 ]
 
+''' Correct rules/sequence of 4 tags '''
 fourgram_rules = [
 
 "VBZ, RB, VBN, VBN",
@@ -32,6 +35,7 @@ fourgram_rules = [
 
 ]
 
+''' Correct rules/sequence of trigram tags '''
 trigram_rules = [
 
 "VBZ, VBN, VBN",
@@ -56,6 +60,7 @@ trigram_rules = [
 "TO, RB, VB"
 ]
 
+''' Correct rules/sequence of bigram tags '''
 bigram_rules = [
 
 "VBZ, VBG",
@@ -80,6 +85,7 @@ bigram_rules = [
 
 ]
 
+''' Correct rules/sequence of unigram tags '''
 unigram_rules = [
 
 "VBP", #- I am fine.
@@ -90,23 +96,33 @@ unigram_rules = [
 
 ]
 
+'''
+    Function which checks the proper verb tense formation of the sentence and
+returns the number of errors in all the sentences
+Params: dot_processed_sentences - proper formatted sentencesself
 
+returns - number of errors
+'''
 def verb_tense(dot_processed_sentences):
     verb_tense_errors = 0
-    # print("sssssssssssssssssskdsjfngjkdfngkjdfng")
+
     for sentence_index, sentence in enumerate(dot_processed_sentences):
         pos_tagged_sentence = pos_tag(word_tokenize(sentence))
         # print(pos_tagged_sentence)
+        '''To build the longest possible (upto 4) tag sequence to check'''
         tag_sequence = []
         for tag_index, tag in enumerate(pos_tagged_sentence):
+            ''' 1st tag should be from verbs list '''
             if len(tag_sequence) == 0:
                 if tag[1] in verbs:
                     tag_sequence.append(tag[1])
             else:
-                if tag[1] in verbs_with_adverb:
+                ''' Following tags should be from verbs_with_adverb list'''
+                if tag[1] in verbs_with_adverb and len(tag_sequence) < 4:
                     tag_sequence.append(tag[1])
                 else:
 #                    print(tag_sequence)
+                    ''' Check in the rules list based on the length of the tag sequence '''
                     if len(tag_sequence) == 4:
                         if (', ').join(tag_sequence) not in fourgram_rules:
                             verb_tense_errors += 1

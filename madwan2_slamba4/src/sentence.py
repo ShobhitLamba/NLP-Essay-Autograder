@@ -12,6 +12,11 @@ from nltk.tokenize import sent_tokenize
 # sentence = 'She was waiting in the room and he came in.'
 # print(nlp.parse(sentence))
 
+'''
+Function to divide and count the sentences based on different rules
+Params: one_essay - one essay, nlp - corenlp object
+returns length_of_essay and dot_processed_sentences - divided sentences
+'''
 
 def count_sentences(one_essay, nlp):
     # nlp = StanfordCoreNLP('http://localhost',port=9000)
@@ -37,10 +42,13 @@ def count_sentences(one_essay, nlp):
         dot_index = 0
         while dot_index < len(temp_sentence) - 1:
             dot_index = temp_sentence.find('.', dot_index)
+            ''' if . not found, then add the sentence '''
             if dot_index == -1:
                 temp_sentences_list.append(temp_sentence)
                 break
-            ''' if the next char after . is alpha and there should be atleast 2 characters after the . '''
+            ''' if the next char after . is alpha and there should be atleast 2 characters after the .
+                then break the sentence into two at . and add the two sentences
+            '''
             if dot_index < len(temp_sentence) - 3:
                 if temp_sentence[dot_index + 1].isalpha() and temp_sentence[dot_index - 1] != '.':
                     temp_sentences_list.append(temp_sentence[:dot_index+1])
@@ -68,6 +76,7 @@ def count_sentences(one_essay, nlp):
         ''' Get the pos tag in each sentence after tokenizing it'''
         # parse_tree = nlp.parse(sentence.strip())
         parse_tree = nlp.parse(sentence.strip()).split()
+        ''' if (SBAR (S is found then cound that as a new sentence '''
         if '(SBAR' in parse_tree:
             if parse_tree[parse_tree.index('(SBAR') + 1] == '(S':
                 length_of_essay += 1
