@@ -13,11 +13,16 @@ from topic_coherence import topic_coherence
 # nltk.download('averaged_perceptron_tagger')
 # nltk.download('maxent_ne_chunker')
 # nltk.download('treebank')
-
+''' Wrapper for stanford corenlp '''
 from stanfordcorenlp import StanfordCoreNLP
+'''
+Need to run the server before executing this
+Refer - https://stanfordnlp.github.io/CoreNLP/corenlp-server.html
+'''
 nlp = StanfordCoreNLP('http://localhost',port=9000)
 # nlp = StanfordCoreNLP(r'C:\Academic\NLP\stanford-corenlp-full-2018-02-27')
 
+''' To calculate the final score of the essay '''
 def final_score(part_a, part_b, part_c_i, part_c_ii, part_c_iii, part_d_ii):
     # considering part_c_iii, part_d_i and part_d_ii to be zero for part 1 of project
     # return 2 * part_a - part_b + part_c_i + part_c_ii + 2 * part_c_iii + 3 * part_d_ii
@@ -56,6 +61,7 @@ if __name__ == '__main__':
     part_c_iii_error = 0
     part_d_ii = 0
 
+''' Read training essays based on the sequence in the csv file '''
     for line in csv_file:
         if line_index != 0:
             line_list = line.split(';')
@@ -66,8 +72,10 @@ if __name__ == '__main__':
             one_essay = essay_file.read()
 
             # part_a = count_sentences(one_essay)
+            ''' Count the number of sentences  '''
             part_a, dot_processed_sentences = count_sentences(one_essay, nlp)
 
+            ''' count spelling mistakes '''
             part_b = spellcheck(one_essay)
             essay_lengths.append(part_a)
             spellings.append(part_b)
@@ -150,9 +158,9 @@ if __name__ == '__main__':
     part_i_final_scores = []
     for i in range(100):
         part_i_final_scores.append(final_score(a[i], b[i], c_i[i], c_ii[i], c_iii[i], d_ii[i]))
-    
+
     csv_file.close()
-    
+
 # exit() # comment this before submitting
 
 test_csv_file = open(r'../input/testing/index.csv', 'r')
@@ -166,6 +174,8 @@ test_c_iii = 0
 test_d_ii = 0
 i = 0
 test_line_index = 0
+
+''' Read test essays and write the values in results.txt'''
 for line in test_csv_file:
     if test_line_index != 0:
         line_list = line.split(';')
