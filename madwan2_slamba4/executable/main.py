@@ -6,7 +6,7 @@ from grammar import subjectVerbAgreement
 from verb_tense import verb_tense
 from sentence_formation import check_sentence_formation
 from topic_coherence import topic_coherence
-#import nltk
+import nltk
 
 nltk.download('wordnet')
 nltk.download('punkt')
