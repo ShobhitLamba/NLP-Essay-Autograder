@@ -25,9 +25,9 @@ nlp = StanfordCoreNLP('http://localhost',port=9000)
 ''' To calculate the final score of the essay '''
 def final_score(part_a, part_b, part_c_i, part_c_ii, part_c_iii, part_d_ii):
     # considering part_c_iii, part_d_i and part_d_ii to be zero for part 1 of project
-    # return 2 * part_a - part_b + part_c_i + part_c_ii + 2 * part_c_iii + 3 * part_d_ii
+#     return 2 * part_a - part_b + part_c_i + part_c_ii + 2 * part_c_iii + 3 * part_d_ii
     # After using linear regression to optimize coefficients.
-    return 0.4450007 * part_a -0.20295944 * part_b + 0.11970425 * part_c_i - 0.07988807 * part_c_ii + 0.05913085 * part_c_iii + 0.05431377 * part_d_ii
+    return 0.44407603 * part_a - 0.20066031 * part_b + 0.11946078 * part_c_i - 0.08340117 * part_c_ii + 0.05725546 * part_c_iii + 0.05161766 * part_d_ii
 
 
 if __name__ == '__main__':
@@ -112,6 +112,7 @@ if __name__ == '__main__':
 
         line_index += 1
 
+    # Normalizing the scores to 0-1 scale
     for i in range(100):
         if spellings[i] == 0:
             spellings_N.append(0)
@@ -123,6 +124,7 @@ if __name__ == '__main__':
         c_iii_errors_N.append((c_iii_errors[i] - min(c_iii_errors)) / (max(c_iii_errors) - min(c_iii_errors)))
         topic_relevance_N.append((topic_relevance[i] - min(topic_relevance)) / (max(topic_relevance) - min(topic_relevance)))
 
+    # Normalizing the scores to the required scale
     for i in range(100):
         spellings_N[i] *= 4
         spellings_N[i] = round(spellings_N[i])
@@ -242,7 +244,8 @@ for line in test_csv_file:
         results.write(";")
         results.write(str(test_final_score))
         results.write(";")
-        if test_final_score >= 1.75:
+        # Keeping the dividing point for high and low at 1.87 which is the midpoint of final scores
+        if test_final_score >= 1.87:
             results.write("high\n")
         else:
             results.write("low\n")
