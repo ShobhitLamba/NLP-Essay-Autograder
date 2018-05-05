@@ -6,13 +6,15 @@ from grammar import subjectVerbAgreement
 from verb_tense import verb_tense
 from sentence_formation import check_sentence_formation
 from topic_coherence import topic_coherence
+from pronoun import check_pronoun_coherence
+
 import nltk
 
-nltk.download('wordnet')
-nltk.download('punkt')
-nltk.download('averaged_perceptron_tagger')
-nltk.download('maxent_ne_chunker')
-nltk.download('treebank')
+# nltk.download('wordnet')
+# nltk.download('punkt')
+# nltk.download('averaged_perceptron_tagger')
+# nltk.download('maxent_ne_chunker')
+# nltk.download('treebank')
 ''' Wrapper for stanford corenlp '''
 from stanfordcorenlp import StanfordCoreNLP
 '''
@@ -74,6 +76,14 @@ if __name__ == '__main__':
             # part_a = count_sentences(one_essay)
             ''' Count the number of sentences  '''
             part_a, dot_processed_sentences = count_sentences(one_essay, nlp)
+
+
+            part_d_i_error = check_pronoun_coherence(dot_processed_sentences, nlp)
+            if line_index == 2:
+                exit()
+                # break
+                pass
+            continue # TODO remove this
 
             ''' count spelling mistakes '''
             part_b = spellcheck(one_essay)
