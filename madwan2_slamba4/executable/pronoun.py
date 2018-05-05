@@ -1,3 +1,7 @@
+import json
+from nltk.corpus import wordnet as wn
+# import genderPredictor as gp
+
 third_person_s = [
 'he',
 'she',
@@ -13,16 +17,36 @@ third_person_p = [
 'their'
 ]
 
-props={'annotators': 'ner','pipelineLanguage':'en','outputFormat':'json'}
+props={'annotators': 'ner, dcoref','pipelineLanguage':'en','outputFormat':'json'}
 nlp = None;
 
 def check_pronoun_coherence(dot_processed_sentences, nlp):
     globals()['nlp'] = nlp
     num_mistakes = 0
     pos_tagged_sentences = []
+    # temp_var = json.loads(nlp.annotate(' '.join(dot_processed_sentences), properties=props))
+    # temp_var = json.loads(nlp.annotate(' '.join(dot_processed_sentences), properties=props))
+
+    # print(list(temp_var['corefs'].keys()))
+    # print(list(temp_var.keys()))
+    # print(list(temp_var['sentences'][0].keys()))
+    # for something in temp_var['sentences']:
+    #     for something2 in something['entitymentions']:
+    #         print(something2['text'], something2['ner'])
+            # print(something2)
+    # print(temp_var['sentences'][0]['entitymentions'])
+    # print(temp_var['corefs']['1'])
+    # print(json.dumps(temp_var, indent=4, sort_keys=True))
+
     ''' Get the sentences pos tagged '''
     for sent_index, sentence in enumerate(dot_processed_sentences):
         pos_tags = nlp.pos_tag(sentence)
+        # n_e_r = nlp.ner(sentence)
+
+        # for something in n_e_r:
+        #     if something[1] != 'O':
+        #         print(something)
+
         pos_tagged_sentences.append(pos_tags)
 
     for sent_index, sentence in enumerate(pos_tagged_sentences):
@@ -38,11 +62,11 @@ def check_pronoun_coherence(dot_processed_sentences, nlp):
                         error_found = check_s_pronoun(sentences_to_check, tag, tag_index)
                         # break
                     elif sent_index == 1:
-                        ''' pass 2 sentences, current, current - 1. Current - 2 cannot be pass '''
+                        ''' pass 2 sentences, current and current - 1. Current - 2 cannot be pass '''
                         print('\n******************** second sentence*********************')
                         sentences_to_check = []
                         sentences_to_check.append(sentence) # current sentence
-                        sentences_to_check.append(pos_tagged_sentences[tag_index-1]) # current sentence
+                        sentences_to_check.append(pos_tagged_sentences[sent_index-1]) # current sentence
                         error_found = check_s_pronoun(sentences_to_check, tag, tag_index)
                     else:
                         ''' pass 3 sentences, current, current - 1, current -2 '''
@@ -68,7 +92,7 @@ def check_pronoun_coherence(dot_processed_sentences, nlp):
                         print('\n******************** second sentence*********************')
                         sentences_to_check = []
                         sentences_to_check.append(sentence) # current sentence
-                        sentences_to_check.append(pos_tagged_sentences[tag_index-1]) # current sentence
+                        sentences_to_check.append(pos_tagged_sentences[sent_index-1]) # current sentence
                         error_found = check_p_pronoun(sentences_to_check, tag, tag_index)
                     else:
                         ''' pass 3 sentences, current, current - 1, current -2 '''
@@ -89,25 +113,42 @@ def check_s_pronoun(sentences_to_check, p_tag, p_tag_index):
         ''' if first sentence, then check previous tags'''
         if sent_index == 0:
             sentence = sentence[:p_tag_index]
+        ''' Check the word in wordnet list. if it its a noun.person or noun.body then return false '''
         for tag_index, tag in enumerate(sentence):
-            if 'NN' == tag[1] or 'NNP' == tag[1]:
-                print(tag)
-                # TOIMPLEMENT - if the noun or NNP is a person, then check the gender.
-                # if found then return false
+            if 'NN' == tag[1]:
+                syn_set = wn.synsets(tag[0], pos=wn.NOUN)
+                for syn in syn_set:
+                    lex_name = syn.lexname()
+                    if (lex_name == 'noun.person' or lex_name == 'noun.body'):
+                        # print(p_tag, tag, lex_name, syn)
+                        return False # refernce is found hence no error
+            if 'NNP' == tag[1]:
+                pass
+                # TOIMPLEMENT - if the NNP is a person, then return false
 
     print(sentences_to_check, p_tag)
-    return True
+    return True # didn't find reference - Error found
 
 def check_p_pronoun(sentences_to_check, p_tag, p_tag_index):
     for sent_index, sentence in enumerate(sentences_to_check):
         ''' if first sentence, then check previous tags'''
         if sent_index == 0:
             sentence = sentence[:p_tag_index]
+        ''' Check the word in wordnet list. if it its a noun.group then return false '''
         for tag_index, tag in enumerate(sentence):
-            if 'NNS' == tag[1] or 'NNPS' == tag[1]:
-                print(tag)
-                # TOIMPLEMENT - if the noun or NNP is a person, then check the gender.
-                # if found then return false
+            if 'NNS' == tag[1]:
+                syn_set = wn.synsets(tag[0], pos=wn.NOUN)
+                for syn in syn_set:
+                    lex_name = syn.lexname()
+                    # if tag[0].lower() == 'cigarettes' or tag[0].lower() == 'advertisements':
+                    #     print(p_tag, lex_name, tag)
+
+                    if (lex_name == 'noun.person' or lex_name == 'noun.body' or lex_name == 'noun.group'):
+                        # print(p_tag, tag, lex_name, syn)
+                        return False
+            if 'NNPS' == tag[1]:
+                pass
+                # TOIMPLEMENT - if the NNPS is a group, then return False
 
     print(sentences_to_check, p_tag)
     return True

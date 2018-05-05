@@ -61,6 +61,7 @@ if __name__ == '__main__':
     part_c_i_error = 0
     part_c_ii_error = 0
     part_c_iii_error = 0
+    part_d_i_error = 0
     part_d_ii = 0
 
 
@@ -79,8 +80,9 @@ if __name__ == '__main__':
 
 
             part_d_i_error = check_pronoun_coherence(dot_processed_sentences, nlp)
-            if line_index == 2: # TODO remove this
-                exit()
+            print(part_d_i_error)
+            if line_index == 20: # TODO remove this
+                # exit()
                 # break
                 pass
 
