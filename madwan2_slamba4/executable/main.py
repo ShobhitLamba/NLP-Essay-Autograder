@@ -79,11 +79,10 @@ if __name__ == '__main__':
 
 
             part_d_i_error = check_pronoun_coherence(dot_processed_sentences, nlp)
-            if line_index == 2:
+            if line_index == 2: # TODO remove this
                 exit()
                 # break
                 pass
-            continue # TODO remove this
 
             ''' count spelling mistakes '''
             part_b = spellcheck(one_essay)

@@ -13,7 +13,11 @@ third_person_p = [
 'their'
 ]
 
+props={'annotators': 'ner','pipelineLanguage':'en','outputFormat':'json'}
+nlp = None;
+
 def check_pronoun_coherence(dot_processed_sentences, nlp):
+    globals()['nlp'] = nlp
     num_mistakes = 0
     pos_tagged_sentences = []
     ''' Get the sentences pos tagged '''
@@ -33,15 +37,15 @@ def check_pronoun_coherence(dot_processed_sentences, nlp):
                         sentences_to_check.append(sentence) # current sentence
                         error_found = check_s_pronoun(sentences_to_check, tag, tag_index)
                         # break
-                    ''' pass 2 sentences, current, current - 1. Current - 2 cannot be pass '''
                     elif sent_index == 1:
+                        ''' pass 2 sentences, current, current - 1. Current - 2 cannot be pass '''
                         print('\n******************** second sentence*********************')
                         sentences_to_check = []
                         sentences_to_check.append(sentence) # current sentence
                         sentences_to_check.append(pos_tagged_sentences[tag_index-1]) # current sentence
                         error_found = check_s_pronoun(sentences_to_check, tag, tag_index)
-                    ''' pass 3 sentences, current, current - 1, current -2 '''
                     else:
+                        ''' pass 3 sentences, current, current - 1, current -2 '''
                         print('\n******************** other sentence*********************')
                         sentences_to_check = []
                         sentences_to_check.append(sentence) # current sentence
@@ -59,15 +63,15 @@ def check_pronoun_coherence(dot_processed_sentences, nlp):
                         sentences_to_check.append(sentence) # current sentence
                         error_found = check_p_pronoun(sentences_to_check, tag, tag_index)
                         # break
-                    ''' pass 2 sentences, current, current - 1. Current - 2 cannot be pass '''
                     elif sent_index == 1:
+                        ''' pass 2 sentences, current, current - 1. Current - 2 cannot be pass '''
                         print('\n******************** second sentence*********************')
                         sentences_to_check = []
                         sentences_to_check.append(sentence) # current sentence
                         sentences_to_check.append(pos_tagged_sentences[tag_index-1]) # current sentence
                         error_found = check_p_pronoun(sentences_to_check, tag, tag_index)
-                    ''' pass 3 sentences, current, current - 1, current -2 '''
                     else:
+                        ''' pass 3 sentences, current, current - 1, current -2 '''
                         print('\n******************** other sentence*********************')
                         sentences_to_check = []
                         sentences_to_check.append(sentence) # current sentence
