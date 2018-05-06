@@ -63,14 +63,14 @@ def check_pronoun_coherence(dot_processed_sentences, nlp):
                         # break
                     elif sent_index == 1:
                         ''' pass 2 sentences, current and current - 1. Current - 2 cannot be pass '''
-                        print('\n******************** second sentence*********************')
+#                        print('\n******************** second sentence*********************')
                         sentences_to_check = []
                         sentences_to_check.append(sentence) # current sentence
                         sentences_to_check.append(pos_tagged_sentences[sent_index-1]) # current sentence
                         error_found = check_s_pronoun(sentences_to_check, tag, tag_index)
                     else:
                         ''' pass 3 sentences, current, current - 1, current -2 '''
-                        print('\n******************** other sentence*********************')
+#                        print('\n******************** other sentence*********************')
                         sentences_to_check = []
                         sentences_to_check.append(sentence) # current sentence
                         sentences_to_check.append(pos_tagged_sentences[sent_index-1]) # previous sentence
@@ -89,14 +89,14 @@ def check_pronoun_coherence(dot_processed_sentences, nlp):
                         # break
                     elif sent_index == 1:
                         ''' pass 2 sentences, current, current - 1. Current - 2 cannot be pass '''
-                        print('\n******************** second sentence*********************')
+#                        print('\n******************** second sentence*********************')
                         sentences_to_check = []
                         sentences_to_check.append(sentence) # current sentence
                         sentences_to_check.append(pos_tagged_sentences[sent_index-1]) # current sentence
                         error_found = check_p_pronoun(sentences_to_check, tag, tag_index)
                     else:
                         ''' pass 3 sentences, current, current - 1, current -2 '''
-                        print('\n******************** other sentence*********************')
+#                        print('\n******************** other sentence*********************')
                         sentences_to_check = []
                         sentences_to_check.append(sentence) # current sentence
                         sentences_to_check.append(pos_tagged_sentences[sent_index-1]) # previous sentence
@@ -113,7 +113,7 @@ def check_s_pronoun(sentences_to_check, p_tag, p_tag_index):
         ''' if first sentence, then check previous tags'''
         if sent_index == 0:
             sentence = sentence[:p_tag_index]
-        ''' Check the word in wordnet list. if it its a noun.person or noun.body then return false '''
+        ''' Check the word in wordnet list. if its a noun.person or noun.body then return false '''
         for tag_index, tag in enumerate(sentence):
             if 'NN' == tag[1]:
                 syn_set = wn.synsets(tag[0], pos=wn.NOUN)
@@ -123,10 +123,12 @@ def check_s_pronoun(sentences_to_check, p_tag, p_tag_index):
                         # print(p_tag, tag, lex_name, syn)
                         return False # refernce is found hence no error
             if 'NNP' == tag[1]:
-                pass
                 # TOIMPLEMENT - if the NNP is a person, then return false
+                person_or_not = nlp.ner(tag[0])
+                if person_or_not[0][1] == u'PERSON':
+                    return False
 
-    print(sentences_to_check, p_tag)
+#    print(sentences_to_check, p_tag)
     return True # didn't find reference - Error found
 
 def check_p_pronoun(sentences_to_check, p_tag, p_tag_index):
@@ -134,7 +136,7 @@ def check_p_pronoun(sentences_to_check, p_tag, p_tag_index):
         ''' if first sentence, then check previous tags'''
         if sent_index == 0:
             sentence = sentence[:p_tag_index]
-        ''' Check the word in wordnet list. if it its a noun.group then return false '''
+        ''' Check the word in wordnet list. if its a noun.group then return false '''
         for tag_index, tag in enumerate(sentence):
             if 'NNS' == tag[1]:
                 syn_set = wn.synsets(tag[0], pos=wn.NOUN)
@@ -147,8 +149,10 @@ def check_p_pronoun(sentences_to_check, p_tag, p_tag_index):
                         # print(p_tag, tag, lex_name, syn)
                         return False
             if 'NNPS' == tag[1]:
-                pass
                 # TOIMPLEMENT - if the NNPS is a group, then return False
-
-    print(sentences_to_check, p_tag)
+                group_or_not = nlp.ner(tag[0])
+                if group_or_not[0][1] == u'GROUP':
+                    return False
+                
+#    print(sentences_to_check, p_tag)
     return True

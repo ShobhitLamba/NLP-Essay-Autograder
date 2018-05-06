@@ -21,15 +21,14 @@ from stanfordcorenlp import StanfordCoreNLP
 Need to run the server before executing this
 Refer - https://stanfordnlp.github.io/CoreNLP/corenlp-server.html
 '''
-nlp = StanfordCoreNLP('http://localhost',port=9000)
-# nlp = StanfordCoreNLP(r'C:\Academic\NLP\stanford-corenlp-full-2018-02-27')
+#nlp = StanfordCoreNLP('http://localhost',port=9000)
+nlp = StanfordCoreNLP(r'C:\Academic\NLP\stanford-corenlp-full-2018-02-27')
 
 ''' To calculate the final score of the essay '''
-def final_score(part_a, part_b, part_c_i, part_c_ii, part_c_iii, part_d_ii):
-    # considering part_c_iii, part_d_i and part_d_ii to be zero for part 1 of project
-#     return 2 * part_a - part_b + part_c_i + part_c_ii + 2 * part_c_iii + 3 * part_d_ii
+def final_score(part_a, part_b, part_c_i, part_c_ii, part_c_iii, part_d_i, part_d_ii):
+#    return 2 * part_a - part_b + part_c_i + part_c_ii + 2 * part_c_iii + 2 * part_d_i + 3 * part_d_ii
     # After using linear regression to optimize coefficients.
-    return 0.44407603 * part_a - 0.20066031 * part_b + 0.11946078 * part_c_i - 0.08340117 * part_c_ii + 0.05725546 * part_c_iii + 0.05161766 * part_d_ii
+    return 0.44412049 * part_a - 0.18825032 * part_b + 0.12061126 * part_c_i - 0.08335527 * part_c_ii + 0.05898674 * part_c_iii + 0.03865994 * part_d_i + 0.05246802 * part_d_ii
 
 
 if __name__ == '__main__':
@@ -49,13 +48,16 @@ if __name__ == '__main__':
     c_ii_errors = []
     c_ii_errors_N = []
     c_ii_score = []
+    d_i_errors = []
+    d_i_errors_N = []
     topic_relevance = []
     topic_relevance_N = []
 
     c_iii_errors = []
     c_iii_errors_N = []
     c_iii_score = []
-
+    d_i_score = []
+    
     part_a = 0
     part_b = 0
     part_c_i_error = 0
@@ -80,7 +82,8 @@ if __name__ == '__main__':
 
 
             part_d_i_error = check_pronoun_coherence(dot_processed_sentences, nlp)
-            print(part_d_i_error)
+            d_i_errors.append(part_d_i_error)
+#            print(part_d_i_error)
             if line_index == 20: # TODO remove this
                 # exit()
                 # break
@@ -133,6 +136,7 @@ if __name__ == '__main__':
         c_i_errors_N.append((c_i_errors[i] - min(c_i_errors)) / (max(c_i_errors) - min(c_i_errors)))
         c_ii_errors_N.append((c_ii_errors[i] - min(c_ii_errors)) / (max(c_ii_errors) - min(c_ii_errors)))
         c_iii_errors_N.append((c_iii_errors[i] - min(c_iii_errors)) / (max(c_iii_errors) - min(c_iii_errors)))
+        d_i_errors_N.append((d_i_errors[i] - min(d_i_errors)) / (max(d_i_errors) - min(d_i_errors)))
         topic_relevance_N.append((topic_relevance[i] - min(topic_relevance)) / (max(topic_relevance) - min(topic_relevance)))
 
     # Normalizing the scores to the required scale
@@ -158,6 +162,10 @@ if __name__ == '__main__':
             essay_lengths_score.append(1)
         else:
             essay_lengths_score.append(round(5 - 4 * essay_lengths_N[i]))
+        if d_i_errors_N[i] == 5:
+            d_i_score.append(1)
+        else:
+            d_i_score.append(round(5 - 4 * d_i_errors_N[i]))    
         topic_relevance_N[i] *= 4
         topic_relevance_N[i] = round(topic_relevance_N[i]) + 1
 
@@ -166,11 +174,12 @@ if __name__ == '__main__':
     c_i = c_i_score
     c_ii = c_ii_score
     c_iii = c_iii_score
+    d_i = d_i_score
     d_ii = topic_relevance_N
 
-    part_i_final_scores = []
+    part_ii_final_scores = []
     for i in range(100):
-        part_i_final_scores.append(final_score(a[i], b[i], c_i[i], c_ii[i], c_iii[i], d_ii[i]))
+        part_ii_final_scores.append(final_score(a[i], b[i], c_i[i], c_ii[i], c_iii[i], d_i[i], d_ii[i]))
 
     csv_file.close()
 
@@ -184,6 +193,7 @@ test_b = 0
 test_c_i = 0
 test_c_ii = 0
 test_c_iii = 0
+test_d_i = 0
 test_d_ii = 0
 i = 0
 test_line_index = 0
@@ -204,6 +214,7 @@ for line in test_csv_file:
         part_c_i_error = subjectVerbAgreement(one_essay, nlp)
         part_c_ii_error = verb_tense(dot_processed_sentences)
         part_c_iii_error = check_sentence_formation(dot_processed_sentences, nlp)
+        part_d_i_error = check_pronoun_coherence(dot_processed_sentences, nlp)
         part_d_ii = topic_coherence(one_essay, line_list[1])
 
         test_a = (part_a -  min(essay_lengths)) / (max(essay_lengths) - min(essay_lengths))
@@ -211,6 +222,7 @@ for line in test_csv_file:
         test_c_i = (part_c_i_error - min(c_i_errors)) / (max(c_i_errors) - min(c_i_errors))
         test_c_ii = (part_c_ii_error - min(c_ii_errors)) / (max(c_ii_errors) - min(c_ii_errors))
         test_c_iii = (part_c_iii_error - min(c_iii_errors)) / (max(c_iii_errors) - min(c_iii_errors))
+        test_d_i = (part_d_i_error - min(d_i_errors)) / (max(d_i_errors) - min(d_i_errors))
         test_d_ii = (part_d_ii - min(topic_relevance)) / (max(topic_relevance) - min(topic_relevance))
 
         test_b *= 4
@@ -231,13 +243,18 @@ for line in test_csv_file:
             test_c_iii = 1
         else:
             test_c_iii = round(5 - 4 * test_c_iii)
+            
+        if test_d_i == 5:
+            test_d_i = 1
+        else:
+            test_d_i = round(5 - 4 * test_d_i)    
 
         if test_a == 5:
             test_a = 1
         else:
             test_a = round(4 * test_a) + 1
 
-        test_final_score = final_score(test_a, test_b, test_c_i, test_c_ii, test_c_iii, test_d_ii)
+        test_final_score = final_score(test_a, test_b, test_c_i, test_c_ii, test_c_iii, test_d_i, test_d_ii)
 
         results.write(line_list[0])
         results.write(";")
@@ -250,13 +267,15 @@ for line in test_csv_file:
         results.write(str(test_c_ii))
         results.write(";")
         results.write(str(test_c_iii))
-        results.write(";0;")
+        results.write(";")
+        results.write(str(test_d_i))
+        results.write(";")
         results.write(str(test_d_ii))
         results.write(";")
         results.write(str(test_final_score))
         results.write(";")
         # Keeping the dividing point for high and low at 1.87 which is the midpoint of final scores
-        if test_final_score >= 1.87:
+        if test_final_score >= 2.09:
             results.write("high\n")
         else:
             results.write("low\n")
