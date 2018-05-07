@@ -10,19 +10,19 @@ from pronoun import check_pronoun_coherence
 
 import nltk
 
-# nltk.download('wordnet')
-# nltk.download('punkt')
-# nltk.download('averaged_perceptron_tagger')
-# nltk.download('maxent_ne_chunker')
-# nltk.download('treebank')
+nltk.download('wordnet')
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('maxent_ne_chunker')
+nltk.download('treebank')
 ''' Wrapper for stanford corenlp '''
 from stanfordcorenlp import StanfordCoreNLP
 '''
 Need to run the server before executing this
 Refer - https://stanfordnlp.github.io/CoreNLP/corenlp-server.html
 '''
-#nlp = StanfordCoreNLP('http://localhost',port=9000)
-nlp = StanfordCoreNLP(r'C:\Academic\NLP\stanford-corenlp-full-2018-02-27')
+nlp = StanfordCoreNLP('http://localhost',port=9000)
+# nlp = StanfordCoreNLP(r'C:\Academic\NLP\stanford-corenlp-full-2018-02-27')
 
 ''' To calculate the final score of the essay '''
 def final_score(part_a, part_b, part_c_i, part_c_ii, part_c_iii, part_d_i, part_d_ii):
@@ -57,7 +57,7 @@ if __name__ == '__main__':
     c_iii_errors_N = []
     c_iii_score = []
     d_i_score = []
-    
+
     part_a = 0
     part_b = 0
     part_c_i_error = 0
@@ -165,7 +165,7 @@ if __name__ == '__main__':
         if d_i_errors_N[i] == 5:
             d_i_score.append(1)
         else:
-            d_i_score.append(round(5 - 4 * d_i_errors_N[i]))    
+            d_i_score.append(round(5 - 4 * d_i_errors_N[i]))
         topic_relevance_N[i] *= 4
         topic_relevance_N[i] = round(topic_relevance_N[i]) + 1
 
@@ -243,11 +243,11 @@ for line in test_csv_file:
             test_c_iii = 1
         else:
             test_c_iii = round(5 - 4 * test_c_iii)
-            
+
         if test_d_i == 5:
             test_d_i = 1
         else:
-            test_d_i = round(5 - 4 * test_d_i)    
+            test_d_i = round(5 - 4 * test_d_i)
 
         if test_a == 5:
             test_a = 1
